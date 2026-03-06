@@ -1,5 +1,27 @@
-# 学术综述生成系统 - Web界面使用说明
+# 学术综述生成系统
+## 使用步骤
 
+### 1.配置环境
+```
+1. 创建虚拟环境
+2. 下载所有依赖包：pip install -r requirements.txt
+```
+### 2.配置config
+```
+1. 替换config.py中OPENAI_CONFIG的'base_url'，‘api_key’，'model'三个键，model推荐使用qwen-long系列
+2. 可根据需要调整快速模式和深度模式所对应的文献搜索个数，SEARCH_CONFIG和SEARCH_CONFIG2，快速模式主要根据摘要书写综述，深度模式将试图提取技术章节所对应的论文的全文用于书写综述的技术部分
+```
+### 3.给openalex库的申请信息加邮箱后缀用于返回摘要
+```
+1. 在paper_search_filter.py文件中修改OpenAlexClient类的self.email数据为自己的邮箱
+```
+## 注意事项
+```
+1. semantic scholar库需要进行认证申请，否则速度较慢
+2. 请确保已配置有效的OpenAI API密钥
+3. 深度模式生成时间较长，请耐心等待
+```
+# Web界面使用说明
 ## 简介
 
 本系统提供两种运行方式：
@@ -71,33 +93,13 @@ Overview_generation_r/
 ├── requirements.txt        # 依赖列表
 └── README.md              # 本说明文档
 ```
-## 使用步骤
 
-### 1.配置环境
-```
-1. 创建虚拟环境
-2. 下载所有依赖包：pip install -r requirements.txt
-```
-### 2.配置config
-```
-1. 替换config.py中OPENAI_CONFIG的'base_url'，‘api_key’，'model'三个键，model推荐使用qwen-long系列
-2. 可根据需要调整快速模式和深度模式所对应的文献搜索个数，SEARCH_CONFIG和SEARCH_CONFIG2，快速模式主要根据摘要书写综述，深度模式将试图提取技术章节所对应的论文的全文用于书写综述的技术部分
-```
-### 3.给openalex库的申请信息加邮箱后缀用于返回摘要
-```
-1. 在paper_search_filter.py文件中修改OpenAlexClient类的self.email数据为自己的邮箱
-```
-## 注意事项
-```
-1. semantic scholar库需要进行认证申请，否则速度较慢
-2. 请确保已配置有效的OpenAI API密钥
-3. 深度模式生成时间较长，请耐心等待
-```
 ## 技术栈
 
 - **后端**: Flask + OpenAI API
 - **前端**: HTML5 + CSS3 + JavaScript
 - **文档**: python-docx
+
 
 
 
