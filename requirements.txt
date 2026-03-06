@@ -1,0 +1,24 @@
+# 学术综述生成系统 - 核心依赖
+# 轻量化部署版
+
+# Web框架
+Flask>=3.0.0
+Werkzeug>=3.0.0
+
+# API调用
+openai>=1.0.0
+
+# HTTP请求
+requests>=2.31.0
+
+# 文档生成
+python-docx>=1.1.0
+
+# 学术论文搜索
+arxiv>=2.1.0
+
+# Token计数
+tiktoken>=0.5.0
+
+# PDF文本提取（备用）
+pdfplumber>=0.10.0
