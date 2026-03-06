@@ -3,7 +3,7 @@
 
 ### 1.配置环境
 ```
-1. 创建虚拟环境
+1. 创建虚拟环境，推荐虚拟环境python版本为3.11
 2. 下载所有依赖包：pip install -r requirements.txt
 ```
 ### 2.配置config
@@ -100,6 +100,7 @@ Overview_generation_r/
 - **后端**: Flask + OpenAI API
 - **前端**: HTML5 + CSS3 + JavaScript
 - **文档**: python-docx
+
 
 
 
