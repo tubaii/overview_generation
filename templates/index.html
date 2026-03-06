@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术综述生成系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .mode-option {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .mode-option:hover {
+            border-color: #667eea;
+        }
+        
+        .mode-option.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .mode-option h3 {
+            margin-bottom: 8px;
+        }
+        
+        .mode-option p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-section {
+            display: none;
+        }
+        
+        .progress-section.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 15px;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        /* 日志显示区域 */
+        .log-section {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .log-section h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .log-content {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            color: #e0e0e0;
+        }
+        
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #2a2a4e;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            color: #888;
+            margin-right: 10px;
+        }
+        
+        .log-info {
+            color: #00d4ff;
+        }
+        
+        .log-success {
+            color: #00ff88;
+        }
+        
+        .log-error {
+            color: #ff4757;
+        }
+        
+        .log-warning {
+            color: #ffa502;
+        }
+        
+        .result-section {
+            display: none;
+        }
+        
+        .result-section.active {
+            display: block;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .result-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(17, 153, 142, 0.4);
+        }
+        
+        .tips {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tips h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .tips ul {
+            margin-left: 20px;
+            color: #666;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .config-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .config-info span {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>学术综述生成系统</h1>
+            <p>基于AI的自动化学术综述生成工具</p>
+        </div>
+        
+        <div class="card">
+            <form id="generationForm">
+                <div class="form-group">
+                    <label for="keyword">搜索关键词</label>
+                    <input type="text" id="keyword" name="keyword" 
+                           placeholder="请输入搜索关键词，例如：transformer, deep learning, attention mechanism"
+                           value="{{ default_keyword }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>生成模式</label>
+                    <div class="mode-selector">
+                        <div class="mode-option active" data-mode="fast" onclick="selectMode('fast')">
+                            <h3>快速模式</h3>
+                            <p>约5000字<br>生成速度较快</p>
+                        </div>
+                        <div class="mode-option" data-mode="deep" onclick="selectMode('deep')">
+                            <h3>深度模式</h3>
+                            <p>约12500字<br>内容更加深入</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="mode" name="mode" value="{{ default_mode }}">
+                </div>
+                
+                <button type="submit" class="btn" id="generateBtn" style="margin-top: 20px;">
+                    开始生成综述
+                </button>
+            </form>
+            
+            <div class="tips">
+                <h4>使用提示</h4>
+                <ul>
+                    <li>建议使用具体的学术术语作为关键词</li>
+                    <li>深度模式生成时间较长（约5-10分钟），请耐心等待</li>
+                    <li>生成完成后可下载.docx格式文件</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card progress-section" id="progressSection">
+            <h2 style="margin-bottom: 20px; color: #333;">生成进度</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text" id="progressText">准备中...</p>
+            
+            <!-- 日志显示区域 -->
+            <div class="log-section" id="logSection">
+                <h3>实时进度</h3>
+                <div class="log-content" id="logContent">
+                    <div class="log-entry">
+                        <span class="log-time">--:--:--</span>
+                        <span class="log-info">等待任务启动...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card result-section" id="resultSection">
+            <h2 style="margin-bottom: 20px; color: #333;">生成结果</h2>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentMode = '{{ default_mode }}';
+        let currentTaskId = null;
+        let logInterval = null;
+        
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            document.getElementById('mode').value = mode;
+        }
+        
+        document.getElementById('generationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const keyword = document.getElementById('keyword').value.trim();
+            if (!keyword) {
+                alert('请输入搜索关键词');
+                return;
+            }
+            
+            // 禁用按钮
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>正在生成中...';
+            
+            // 显示进度和日志区域
+            document.getElementById('progressSection').classList.add('active');
+            document.getElementById('resultSection').classList.remove('active');
+            
+            // 清空日志
+            document.getElementById('logContent').innerHTML = '';
+            updateProgress(0, '正在启动任务...');
+            addLog('正在初始化任务...', 'info');
+            
+            try {
+                // 启动任务
+                const response = await fetch('/api/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        keyword: keyword,
+                        mode: currentMode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                currentTaskId = data.task_id;
+                addLog('任务已启动', 'success');
+                
+                // 开始轮询日志和状态
+                logInterval = setInterval(checkStatus, 1000);
+                
+            } catch (error) {
+                addLog('启动任务失败: ' + error.message, 'error');
+                resetButton();
+            }
+        });
+        
+        async function checkStatus() {
+            if (!currentTaskId) return;
+            
+            try {
+                // 获取状态
+                const statusResponse = await fetch(`/api/status/${currentTaskId}`);
+                const statusData = await statusResponse.json();
+                
+                updateProgress(statusData.progress || 0, statusData.message || '');
+                
+                // 获取日志
+                const logsResponse = await fetch(`/api/logs/${currentTaskId}`);
+                const logsData = await logsResponse.json();
+                
+                // 更新日志显示
+                updateLogs(logsData);
+                
+                if (statusData.status === 'completed') {
+                    clearInterval(logInterval);
+                    showResult(statusData.result);
+                    resetButton();
+                } else if (statusData.status === 'failed') {
+                    clearInterval(logInterval);
+                    addLog('生成失败: ' + (statusData.error || '未知错误'), 'error');
+                    showError(statusData.error || '生成失败');
+                    resetButton();
+                }
+                
+            } catch (error) {
+                console.error('检查状态失败：', error);
+            }
+        }
+        
+        function updateProgress(progress, message) {
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = message;
+        }
+        
+        function addLog(message, level = 'info') {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `
+                <span class="log-time">${timeStr}</span>
+                <span class="log-${level}">${message}</span>
+            `;
+            
+            document.getElementById('logContent').appendChild(logEntry);
+            
+            // 滚动到底部
+            const logSection = document.getElementById('logSection');
+            logSection.scrollTop = logSection.scrollHeight;
+        }
+        
+        function updateLogs(logs) {
+            const logContent = document.getElementById('logContent');
+            const existingLogs = logContent.querySelectorAll('.log-entry');
+            const existingTimestamps = new Set();
+            
+            // 获取现有日志的时间戳
+            existingLogs.forEach(log => {
+                const timeEl = log.querySelector('.log-time');
+                if (timeEl) {
+                    existingTimestamps.add(timeEl.textContent + log.querySelector('.log-info, .log-success, .log-error, .log-warning')?.textContent);
+                }
+            });
+            
+            // 添加新日志
+            logs.forEach(log => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.innerHTML = `
+                    <span class="log-time">${log.timestamp}</span>
+                    <span class="log-${log.level}">${log.message}</span>
+                `;
+                logContent.appendChild(logEntry);
+            });
+            
+            // 滚动到底部
+            const logSection = document.getElementById('logSection');
+            logSection.scrollTop = logSection.scrollHeight;
+        }
+        
+        function showResult(result) {
+            const section = document.getElementById('resultSection');
+            const content = document.getElementById('resultContent');
+            
+            // 隐藏进度区域，显示结果区域
+            document.getElementById('progressSection').classList.remove('active');
+            section.classList.add('active');
+            
+            content.innerHTML = `
+                <div class="result-card">
+                    <h3>生成成功</h3>
+                    <p><strong>关键词：</strong>${document.getElementById('keyword').value}</p>
+                    <p><strong>文件名：</strong>${result.filename}</p>
+                </div>
+                <a href="/api/download/${result.filename}" class="download-btn">
+                    下载DOCX文件
+                </a>
+            `;
+            
+            addLog('生成完成！', 'success');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showError(message) {
+            const section = document.getElementById('resultSection');
+            const content = document.getElementById('resultContent');
+            
+            section.classList.add('active');
+            content.innerHTML = `
+                <div class="result-card" style="background: #fee;">
+                    <h3 style="color: #c00;">生成失败</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetButton() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = false;
+            btn.textContent = '开始生成综述';
+        }
+    </script>
+</body>
+</html>
