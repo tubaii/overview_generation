@@ -18,8 +18,9 @@
 ## 注意事项
 ```
 1. semantic scholar库需要进行认证申请，否则速度较慢
-2. 请确保已配置有效的OpenAI API密钥
-3. 深度模式生成时间较长，请耐心等待
+2. 关键词仅支持英文
+3. 请确保已配置有效的OpenAI API密钥
+4. 深度模式生成时间较长，请耐心等待
 ```
 # Web界面使用说明
 ## 简介
@@ -99,6 +100,7 @@ Overview_generation_r/
 - **后端**: Flask + OpenAI API
 - **前端**: HTML5 + CSS3 + JavaScript
 - **文档**: python-docx
+
 
 
 
