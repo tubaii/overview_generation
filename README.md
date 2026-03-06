@@ -1,5 +1,5 @@
 # 学术综述生成系统
-## 使用步骤
+## 使用步骤（完成这三步即可）
 
 ### 1.配置环境
 ```
@@ -100,6 +100,7 @@ Overview_generation_r/
 - **后端**: Flask + OpenAI API
 - **前端**: HTML5 + CSS3 + JavaScript
 - **文档**: python-docx
+
 
 
 
