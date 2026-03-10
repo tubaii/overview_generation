@@ -1,4 +1,6 @@
 # 学术综述生成系统
+<img width="1910" height="942" alt="屏幕截图 2026-03-06 213042" src="https://github.com/user-attachments/assets/af2172d4-f1b1-4a43-bbab-3460e3d056f6" />
+
 ## 使用步骤（完成这三步即可）
 
 ### 1.配置环境
@@ -100,6 +102,7 @@ Overview_generation_r/
 - **后端**: Flask + OpenAI API
 - **前端**: HTML5 + CSS3 + JavaScript
 - **文档**: python-docx
+
 
 
 
